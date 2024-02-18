@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Card</title>
+<style>
+  .card {
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+    margin: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+  .card-content {
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  .client-details {
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 15px; /* Added margin for spacing above buttons */
+  }
+  /* Button styling */
+  .card-button {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px #999;
+    margin-right: 10px; /* Space between buttons */
+  }
+  .card-button:hover {background-color: #45a049}
+  .card-button:active {
+    background-color: #45a049;
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
+  }
+  /* Different color for delete button */
+  .delete-button {
+    background-color: #f44336;
+  }
+  .delete-button:hover {
+    background-color: #dc2836;
+  }
+</style>
+</head>
+<body>
+    
+<div class="card">
+    <img src="data:<%= request.image.contentType %>;base64,<%= request.image.image.toString('base64') %>" alt="Client Image">
+    <div class="card-content">
+    <h2 class="card-title">Problem Description</h2>
+    <p class="card-desc"><%= request.details %></p>
+    <p class="client-details"><strong>name: <%= userData.fullName %></strong><br>
+    <strong>Client Number:</strong> <%= userData.phoneNumber %></p>
+    Buttons
+    <button class="card-button delete-button" id="deleteButton">Reject</button>
+    <button class="card-button">Add Offer</button>
+  </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get the delete button element
+      const deleteButton = document.getElementById("deleteButton");
+    
+      // Add event listener for click event
+      deleteButton.addEventListener("click", async function() {
+        try {
+          // Make a fetch request to delete the offer
+          const response = await fetch("/deleteOffer", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                requestID: "<%= request._id %>",
+                technicalID: "65d1ec60e878abbe208a42ed"
+            })
+          });
+    
+          if (!response.ok) {
+            throw new Error("Failed to delete offer");
+          }
+    
+          // Reload the page or perform any other action if needed
+          location.reload(); // Reload the page for example
+        } catch (error) {
+          console.error("Error deleting offer:", error);
+          // Handle error
+        }
+      });
+    });
+    </script>
+</body>
+</html>
