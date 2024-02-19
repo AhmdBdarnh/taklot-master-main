@@ -1,7 +1,8 @@
 const userRepository = require('../../repository/userRepository/userRepos');
+const techRepository = require('../../repository/technicalReoistory/technicalRepos');
+const reqRepository = require('../../repository/requestRepostiory/requesRepos');
+
 const { NotFoundError, BadRequsetError } = require('../../errors/err');
-
-
 
 
 
@@ -11,7 +12,8 @@ const user_post = async (req, res) => {
   try {
     const new_user = await userRepository.addUser(req.body);
     if (!new_user) throw new BadRequsetError(`User implement is not true`);
-       return res.status(200).render("signup");
+       res.redirect('/login');
+
   } 
   catch (err) {
     res.status(err?.status || 500).json({ message: err.message });
@@ -43,30 +45,50 @@ const getSignup = async (req, res) => {
 
 const getLogin = async (req, res) => {
   try {
-      res.render('login');
-  } 
-  catch (err) {
+    res.render('login');
+  } catch (err) {
     return res.status(err?.status || 500).json({ message: err.message });
   }
 };
-const request = require('../../module/reuqestsSchema/request');
 
-// get get page
+
 const post_Login = async (req, res) => {
   try {
     const { userName, password } = req.body;
-    const resp = await userRepository.checkUser(userName, password);
-    
-    if (!resp.isMatch) {
-      return res.status(400).render('login', { error: 'Invalid username or password' });
+    const user = await userRepository.checkUser(userName, password);
+    if (!user) {
+      const technical = await techRepository.checkUser(userName, password);
+      if (!technical) {
+        throw new NotFoundError('User');
+      } else {
+        res.redirect(`/home/technical/?technicalId=${technical.technicalId}`);
+      }
+    } else {
+      res.redirect(`/home/helpseeker/?helpseekerId=${user.userId}`);
     }
-    // Redirect to the home page after successful login
-    res.redirect('/userHome');
-  } 
+  } catch (err) {
+    if (res.headersSent) {
+      console.error('Headers already sent, unable to send error response');
+    } else {
+      return res.status(err?.status || 500).json({ message: err.message });
+    }
+  }
+};
+
+
+const getUserPage = async (req, res) => {
+  try {
+    const helpseekerId = req.query.helpseekerId;
+    const userData = await userRepository.getName_Number(helpseekerId);
+    const request = await reqRepository.getRequestByUserID(helpseekerId);
+
+    return res.render('userHome',{userData,request,helpseekerId});
+  }
   catch (err) {
     return res.status(err?.status || 500).json({ message: err.message });
   }
-};
+}
+
 
 
 // update user
@@ -133,4 +155,6 @@ module.exports = {
   getLogin,
   post_Login,
   getName_Number,
+  getUserPage,
+
 };

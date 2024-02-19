@@ -7,7 +7,6 @@ const offerRout = require('./router/offerRouter/offer');
 const homeRout = require('./router/homePageRouter/home');
 const feedbackRout = require('./router/feedbackRouter/feedback');
 const singupRout = require('./router/signup/signup');
-
 // const session = require('express-session');
 
 
@@ -18,7 +17,7 @@ const path = require('path');
  
 // Constants
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
  
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,18 +44,8 @@ app.use(singupRout);
 
 
 
-
 // connect to db
 connectDB();
-
-
-
-// // Use express-session middleware
-// app.use(session({
-//   secret: 'your-secret-key',
-//   resave: false,
-//   saveUninitialized: true
-// }));
 
 
 app.listen(port, () => {

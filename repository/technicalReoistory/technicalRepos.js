@@ -74,6 +74,31 @@ const checkCategory = async category => {
 };
 
 
+const checkUser = async (userName, password) => {
+    try {
+        let isMatch = true;
+        const technical = await Techincal.findOne({ userName });
+        if (!technical){
+            return false
+        }
+        if (password === technical.password) {
+             isMatch = true;
+
+        } 
+        else {
+             isMatch = false;
+        }
+        return { isMatch, technicalId: technical._id };
+    } 
+    catch (error) {
+        console.error("Error verifying user:", error);
+        throw error;
+    }
+};
+
+
+
+
 module.exports = {
     getTechincalById,
     addTechincal,
@@ -81,4 +106,5 @@ module.exports = {
     deleteTechincal,
     getAllTechincal,
     checkCategory,
+    checkUser,
 };

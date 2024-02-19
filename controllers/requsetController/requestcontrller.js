@@ -39,8 +39,11 @@ const request_post = async (req, res) => {
             if (!chOffer) throw new BadRequsetError(`Offer implement is not true`);
             
         }
-        res.status(201).send('Image uploaded successfully');
-    } catch (err) {
+        const userData = null;
+        res.render('userHome',{userData,request:newReq,helpseekerId:helpseekerId});
+
+
+      } catch (err) {
         console.error(err);
         res.status(500).send('Error uploading image');
     }

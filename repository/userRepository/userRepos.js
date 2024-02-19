@@ -63,14 +63,13 @@ const checkUser = async (userName, password) => {
         if (!user){
             return false
         }
-        if (password === user.password) {
+        if(password === user.password) {
              isMatch = true;
-
         } 
         else {
              isMatch = false;
         }
-        return { isMatch, userId: user._id };
+            return { isMatch, userId: user._id };
     } 
     catch (error) {
         console.error("Error verifying user:", error);

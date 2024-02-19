@@ -8,7 +8,6 @@ const { NotFoundError, BadRequsetError } = require('../../errors/err');
 
 const deleteOffer = async (req, res) => {
   try {
-    console.log(req.technicalID);
     const { requestID, technicalID } = req.body;
     await offerRepository.deleteOffer({ requestID, technicalID });
   } catch (error) {
@@ -31,8 +30,13 @@ const getSignup = async (req, res) => {
 // get Technical page
 const getTechPage = async (req, res) => {
   try {
-    const request = await getOffers();
-    const userData = await userRepository.getName_Number(request.helpseekerId);
+    const technicalID = req.query.technicalId;
+    const request = await getOffers(technicalID);
+    const helpseekerId = "65cdd4aa323858afb68be3b1";
+
+    const userData = await userRepository.getName_Number(helpseekerId);
+    // console.log(userData);
+
     res.render('technical',{request,userData});
   } 
   catch (err) {
@@ -41,19 +45,20 @@ const getTechPage = async (req, res) => {
 };
 
 
-const getOffers = async (req, res) => {
+const getOffers = async (technicalID) => {
   try {
-      const technicalID = "65d1ec60e878abbe208a42ed";
-      const requestID = await offerRepository.getOffersByTechID(technicalID);
-      const request = await requestRepository.getReqById(requestID);
 
-      return request;
-    } 
-  catch (err) {
-    res.status(err?.status || 500).json({ message: err.message });
+    const offer = await offerRepository.getOffersByTechID(technicalID);
+    const request = await requestRepository.getReqById(offer);
+  
+
+    // const requestIDs = offers.map(offer => offer.requestID.toString());
+    return request;
+  } catch (err) {
+    throw err;
   }
+};
 
-}
 
 
 

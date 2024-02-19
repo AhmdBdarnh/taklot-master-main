@@ -7,13 +7,14 @@
     <title>New Request</title>
 </head>
 <body>
+
     <header><img src="/images/image 1.png"> </header>
     <h6 class="path">Home/Add Request</h6>
     <h3 class="big_title">New Request</h3>
 
     <form action="/home/request" method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <input type="text" id="helpseekerId" name="helpseekerId" style="display:none;" value="65cdd4aa323858afb68be3b1">
+            <input type="text" id="helpseekerId" name="helpseekerId" style="display:none;">
         </div>
 
         <!-- <div class="form-group">
@@ -50,6 +51,16 @@
     </form>
 </body>
 <script>
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    // Get the helpseekerId from the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const helpseekerId = urlParams.get('helpseekerId');
+    
+    // Set the value of the input field to the extracted helpseekerId
+    document.getElementById('helpseekerId').value = helpseekerId;
+});
+
     var jsonData = {
         "categories": ["pip", "Category 2", "Category 3"]
     };

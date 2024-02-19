@@ -55,13 +55,15 @@ const gettAllOffer = async id => {
 
 const getOffersByTechID = async technicalID => {
     try {
-        const offer = await Offer.findOne({technicalID});
-        return offer.requestID;
-    } 
-    catch{
-        return false;
+        const latestOffer = await Offer.findOne({ technicalID })
+            .sort({ _id: -1 }) // Sort by ObjectId in descending order
+            .select('requestID'); // Select only the requestID field
+        return latestOffer ? latestOffer.requestID : null;
+    } catch (err) {
+        throw err;
     }
 };
+
 
 
 

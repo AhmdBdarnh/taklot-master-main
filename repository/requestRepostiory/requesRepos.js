@@ -56,6 +56,15 @@ const addReq = async reqData => {
 };
 
 
+const getRequestByUserID = async helpseekerId => {
+    try {
+        const request = await Req.findOne({helpseekerId});
+        return request;
+    } 
+    catch{
+        return false;
+    }
+};
 
 
 
@@ -65,5 +74,6 @@ module.exports = {
     udpateReq,
     deleteReq,
     gettAllReq,
+    getRequestByUserID
 
 };
